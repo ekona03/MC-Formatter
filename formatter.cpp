@@ -170,10 +170,11 @@ void ct_print(string item_name, string item_name_main, string item_name_recipe, 
 {
     cout << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n\n"
          << setfill(' ') << "#" << item_name_main << "\n"
+         << setw(4) << " " << "recipes.remove(<" << item_name << ">);\n"
          << setw(4) << " " << "recipes.addShaped(\"" << item_name_recipe << "\",\n"
          << setw(8) << " " << "<" << item_name << ">,\n"
-         << setw(8) << " " << "[[<" << ingredient[0] << ">, <" << ingredient[1] << ">, <" << ingredient[2] << ">],\n"
-         << setw(8) << " " << "[<" << ingredient[3] << ">, <" << ingredient[4] << ">, <" << ingredient[5] << ">],\n"
-         << setw(8) << " " << "[<" << ingredient[6] << ">, <" << ingredient[7] << ">, <" << ingredient[8] << ">]]);\n"
+         << setw(12) << " " << "[[<" << ingredient[0] << ">, <" << ingredient[1] << ">, <" << ingredient[2] << ">],\n"
+         << setw(12) << " " << "[<" << ingredient[3] << ">, <" << ingredient[4] << ">, <" << ingredient[5] << ">],\n"
+         << setw(12) << " " << "[<" << ingredient[6] << ">, <" << ingredient[7] << ">, <" << ingredient[8] << ">]]);\n"
          << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n";
 }
