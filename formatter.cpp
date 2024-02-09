@@ -14,15 +14,15 @@ string get_recipe_name(const string&);
 int main()
 {
     int val;
-    cout << "\n------------------------------------\n"
+    cout << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n"
          << "CT Formatter\n"
-         << "------------------------------------\n"
+         << "<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n"
          << "[1] CraftTweaker Table Recipe\n"
          << "[2] Extended Crafting 3x3\n"
          << "[3] Extended Crafting 5x5\n"
          << "[4] Extended Crafting 7x7\n"
          << "[5] Extended Crafting 9x9\n"
-         << "------------------------------------\n\n"
+         << "<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n\n"
          << "Select Recipe Type: ";
     
     cin >> val;
