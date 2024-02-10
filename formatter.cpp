@@ -11,6 +11,10 @@ void ct_print(string, string, string, const vector<string>&);
 string get_main_name(const string&);
 string get_recipe_name(const string&);
 
+/**
+ * @brief standard input for recipe type selection.
+ * 
+ */
 int main()
 {
     int val;
@@ -40,6 +44,12 @@ int main()
     return 0;
 }
 
+
+/**
+ * @brief standard input of ct generated string. 
+ * parses through the string and stores each item within <> to a vector string.
+ * 
+ */
 void ct_recipe()
 {
     string input_string;
@@ -48,7 +58,7 @@ void ct_recipe()
     string item_name;
     string substring;
 
-    vector<string> ingredient(9);
+    vector<string> ingredient(81);
 
     size_t pos;
     size_t ingredient_index;
@@ -56,7 +66,7 @@ void ct_recipe()
 
     while (true)
     {
-        cout << "\nPaste in the unfromatted recipe below, type exit to end program:\n";
+        cout << "\nPaste in the unformatted recipe below, type exit to end program:\n";
         getline(cin, input_string);
 
         if (input_string == "exit")
@@ -73,7 +83,7 @@ void ct_recipe()
             end_pos = input_string.find('>', pos);
             if (end_pos != string::npos)
             {
-                substring = input_string.substr(pos + 1, end_pos - pos - 1);
+                substring = input_string.substr(pos, end_pos - pos + 1);
 
                 if (item_name.empty())
                 {
@@ -99,6 +109,13 @@ void ct_recipe()
     }
 }
 
+
+/**
+ * @brief Get the main name object
+ * 
+ * @param item_name item that the recipe is crafting
+ * @return string default name
+ */
 string get_main_name(const string& item_name)
 {
     size_t colon_pos = item_name.find(':');
@@ -135,12 +152,19 @@ string get_main_name(const string& item_name)
 }
 
 
+/**
+ * @brief Get the recipe name object
+ * 
+ * @param item_name item that the recipe is crafting
+ * @return string unique recipe identifier name
+ */
 string get_recipe_name(const string& item_name)
 {
     string item_name_recipe;
 
-    for (char ch : item_name)
+    for (size_t i = 1; i < item_name.size() - 1; ++i)
     {
+        char ch = item_name[i];
         if (ch == ':' || ch == '_')
         {
             continue;
@@ -166,15 +190,23 @@ string get_recipe_name(const string& item_name)
 }
 
 
+/**
+ * @brief prints the formatted string
+ * 
+ * @param item_name registry name
+ * @param item_name_main default name
+ * @param item_name_recipe unique recipe identifier name
+ * @param ingredient item used in recipe
+ */
 void ct_print(string item_name, string item_name_main, string item_name_recipe, const vector<string>& ingredient)
 {
     cout << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n\n"
          << setfill(' ') << "#" << item_name_main << "\n"
-         << setw(4) << " " << "recipes.remove(<" << item_name << ">);\n"
+         << setw(4) << " " << "recipes.remove(" << item_name << ");\n"
          << setw(4) << " " << "recipes.addShaped(\"" << item_name_recipe << "\",\n"
-         << setw(8) << " " << "<" << item_name << ">,\n"
-         << setw(12) << " " << "[[<" << ingredient[0] << ">, <" << ingredient[1] << ">, <" << ingredient[2] << ">],\n"
-         << setw(12) << " " << "[<" << ingredient[3] << ">, <" << ingredient[4] << ">, <" << ingredient[5] << ">],\n"
-         << setw(12) << " " << "[<" << ingredient[6] << ">, <" << ingredient[7] << ">, <" << ingredient[8] << ">]]);\n"
+         << setw(8) << " " << item_name << ",\n"
+         << setw(12) << " " << "[[" << ingredient[0] << ", " << ingredient[1] << ", " << ingredient[2] << "],\n"
+         << setw(12) << " " << "[" << ingredient[3] << ", " << ingredient[4] << ", " << ingredient[5] << "],\n"
+         << setw(12) << " " << "[" << ingredient[6] << ", " << ingredient[7] << ", " << ingredient[8] << "]]);\n"
          << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n";
 }
