@@ -58,11 +58,11 @@ void ct_recipe()
     string item_name;
     string substring;
 
-    vector<string> ingredient(81);
+    vector<string> ingredient;
 
     size_t pos;
-    size_t ingredient_index;
     size_t end_pos;
+    size_t pos_null;
 
     while (true)
     {
@@ -75,36 +75,49 @@ void ct_recipe()
         }
         else
         {
-        pos = input_string.find('<');
-        ingredient_index = 0;
+            pos = input_string.find('<');
+            pos_null = input_string.find("null");
 
-        while (pos != string::npos && ingredient_index < 9)
-        {
-            end_pos = input_string.find('>', pos);
-            if (end_pos != string::npos)
+            ingredient.clear();
+
+            while (pos != string::npos || pos_null != string::npos)
             {
-                substring = input_string.substr(pos, end_pos - pos + 1);
-
-                if (item_name.empty())
+                if (pos_null != string::npos && (pos == string::npos || pos_null < pos))
                 {
-                    item_name = substring;
+                    ingredient.push_back("null");
+                    pos_null = input_string.find("null", pos_null + 4);
+                }
+                else if (pos != string::npos)
+                {
+                    end_pos = input_string.find('>', pos);
+                    if (end_pos != string::npos)
+                    {
+                        substring = input_string.substr(pos, end_pos - pos + 1);
+
+                        if (item_name.empty())
+                        {
+                            item_name = substring;
+                        }
+                        else
+                        {
+                            ingredient.push_back(substring);
+                        }
+
+                        pos = input_string.find('<', end_pos);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 else
                 {
-                    ingredient[ingredient_index] = substring;
-                    ++ingredient_index;
+                    break;
                 }
-
-                pos = input_string.find('<', end_pos);
             }
-            else
-            {
-                break;
-            }
-        }
-        item_name_main = get_main_name(item_name);
-        item_name_recipe = get_recipe_name(item_name);
-        ct_print(item_name, item_name_main, item_name_recipe, ingredient);
+            item_name_main = get_main_name(item_name);
+            item_name_recipe = get_recipe_name(item_name);
+            ct_print(item_name, item_name_main, item_name_recipe, ingredient);
         }
     }
 }
@@ -124,7 +137,7 @@ string get_main_name(const string& item_name)
         return "";
     }
 
-    string item_name_main = item_name.substr(colon_pos + 1);
+    string item_name_main = item_name.substr(colon_pos + 1, item_name.size() - colon_pos - 2);
 
     for (size_t i = 0; i < item_name_main.length(); ++i)
     {
