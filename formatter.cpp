@@ -47,7 +47,7 @@ int main()
 
 /**
  * @brief standard input of ct generated string. 
- * parses through the string and stores each item within <> to a vector string.
+ * parses through the string and stores each item within <> and each null to a vector string.
  * 
  */
 void ct_recipe()
