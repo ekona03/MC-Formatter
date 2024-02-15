@@ -8,7 +8,7 @@ using namespace std;
 
 class formatter {
     public:
-        char select_val;
+        int select_val;
         string item_name_main;
         string item_name_recipe;
         string item_name;
@@ -25,6 +25,8 @@ class formatter {
         string get_main_name(const string&);
         string get_recipe_name(const string&);
         bool failsafe(const string&);
+        void print_text_invalid();
+        void print_text_recipe();
 };
 
 
@@ -150,7 +152,8 @@ void formatter::ct_print(string item_name, string item_name_main, string item_na
 }
 
 /**
- * @brief prints the recipe selection
+ * @brief prints the recipe selection and makes sure the right value is inputed, 
+ * otherwise will prompt user again
  * 
  */
 void formatter::print_selection() {
@@ -168,12 +171,17 @@ void formatter::print_selection() {
     while (true) {
         cin >> select_val;
         cin.ignore();
-        if (select_val == 49) {
-            break;
-        } else {
-            cout << "Incorrect value, Select Recipe Type: ";
+        if(!isdigit(select_val)) {
+            cout << "Incorrect character, Select Recipe Type: ";
             cin.clear();
-        }
+        } else {
+            if (select_val == 1) {
+                break;
+            } else {
+                cout << "Incorrect value, Select Recipe Type: ";
+            }
+        cin.clear();
+        }   
     }
 }
 
@@ -195,6 +203,25 @@ bool formatter::failsafe(const string& input_string) {
 }
 
 /**
+ * @brief prints the invalid input text unpon an invalid input being inputed
+ * 
+ */
+void formatter::print_text_invalid()
+{
+    cout << "\n----------------------- Invalid Input -----------------------\n";
+}
+
+/**
+ * @brief prints paste recipe below text
+ * 
+ */
+void formatter::print_text_recipe()
+{
+    cout << "\nPaste in unformatted recipe below, type 'exit' to end program\n"
+         << "v---v---v---v---v---v---v---v---v---v---v---v---v---v---v---v\n\n";
+}
+
+/**
  * @brief standard input for recipe type selection.
  * 
  */
@@ -202,10 +229,9 @@ int main() {
     formatter obj;
     obj.print_selection();
     switch (obj.select_val) {
-        case 49:
+        case '1':
             while (true) {
-                cout << "\nPaste in unformatted recipe below, type 'exit' to end program\n"
-                     << "↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓\n\n";
+                obj.print_text_recipe();
                 getline(cin, obj.input_string);
                 if (obj.input_string == "exit") {
                     obj.ingredient.clear();
@@ -213,10 +239,15 @@ int main() {
                 }
                 if (obj.failsafe(obj.input_string)) {
                     obj.ct_recipe();
-                    obj.ct_print(obj.item_name, obj.item_name_main, obj.item_name_recipe, obj.ingredient);
+                    if (obj.ingredient.size() == 9) {
+                        obj.ct_print(obj.item_name, obj.item_name_main, obj.item_name_recipe, obj.ingredient);
+                        obj.ingredient.clear();
+                    } else {
+                        obj.print_text_invalid();
+                    }
                     obj.ingredient.clear();
                 } else {
-                    cout << "\n----------------------- Invalid Input -----------------------\n";
+                    obj.print_text_invalid();
                 }
             }
             break;
