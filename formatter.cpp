@@ -171,17 +171,12 @@ void formatter::print_selection() {
     while (true) {
         cin >> select_val;
         cin.ignore();
-        if(!isdigit(select_val)) {
-            cout << "Incorrect character, Select Recipe Type: ";
-            cin.clear();
+        if (select_val == 1) {
+            break;
         } else {
-            if (select_val == 1) {
-                break;
-            } else {
-                cout << "Incorrect value, Select Recipe Type: ";
-            }
-        cin.clear();
-        }   
+            cout << "Incorrect value, Select Recipe Type: ";
+        }
+        cin.clear();   
     }
 }
 
@@ -229,7 +224,7 @@ int main() {
     formatter obj;
     obj.print_selection();
     switch (obj.select_val) {
-        case '1':
+        case 1:
             while (true) {
                 obj.print_text_recipe();
                 getline(cin, obj.input_string);
