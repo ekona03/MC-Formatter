@@ -1,19 +1,12 @@
 # CraftTweaker Script Formatter
 
-This Terminal-based CraftTweaker formatter is used to format unformatted recipes that CraftTweaker generates.
+A simple command-line formatter for formatting unformatted recipe scripts that CraftTweaker generates.
 
-# PREREQUISITES
+# Installation
 
-MinGW-w64 toolchain
+[MSYS2](https://www.msys2.org/) is needed to run the formatter exe. To install it, follow the steps [here](https://code.visualstudio.com/docs/cpp/config-mingw).
+VSCode is not required for this, just MSYS2.
 
-MSYS2 is needed to run the formatter exe. To install the MinGW-w64 toolchain follow the steps in the link below.
-https://code.visualstudio.com/docs/cpp/config-mingw
-
-
-# Functions
-
-For Version: 1.12.2
-
-Currently limited to standard crafting table recipes
-
-Tags are currently unsupported
+# Limitations
+Currently limited to standard crafting table recipes.
+For Minecraft Version: 1.12.2
