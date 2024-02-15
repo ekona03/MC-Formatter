@@ -8,7 +8,7 @@ using namespace std;
 
 class formatter {
     public:
-        int select_val;
+        char select_val;
         string item_name_main;
         string item_name_recipe;
         string item_name;
@@ -168,11 +168,11 @@ void formatter::print_selection() {
     while (true) {
         cin >> select_val;
         cin.ignore();
-        if (select_val == 1) {
+        if (select_val == 49) {
             break;
         } else {
             cout << "Incorrect value, Select Recipe Type: ";
-            select_val = 0;
+            cin.clear();
         }
     }
 }
@@ -202,7 +202,7 @@ int main() {
     formatter obj;
     obj.print_selection();
     switch (obj.select_val) {
-        case 1:
+        case 49:
             while (true) {
                 cout << "\nPaste in unformatted recipe below, type 'exit' to end program\n"
                      << "↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓---↓\n\n";
