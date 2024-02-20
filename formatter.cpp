@@ -2,17 +2,12 @@
 #include <string>
 #include <iomanip>
 #include <vector>
-#include <cctype>
-#include <limits>
 
 using namespace std;
 
 class formatter {
     public:
         int select_val;
-        string item_name_main;
-        string item_name_recipe;
-        string item_name;
         string input_string;
         string substring;
         size_t pos;
@@ -23,9 +18,9 @@ class formatter {
         void ct_recipe();
         void print_selection();
         void int_selection();
-        void ct_print(string, string, string, const vector<string>&);
-        string get_main_name(const string&);
-        string get_recipe_name(const string&);
+        void ct_print();
+        string get_main_name();
+        string get_recipe_name();
         bool failsafe(const string&);
         void print_text_invalid();
         void print_text_recipe();
@@ -38,7 +33,6 @@ class formatter {
  * 
  */
 void formatter::ct_recipe() {
-    item_name.clear();
     pos = input_string.find('<');
     pos_null = input_string.find("null");
 
@@ -50,11 +44,7 @@ void formatter::ct_recipe() {
             pos_end = input_string.find('>', pos);
             if (pos_end != string::npos) {
                 substring = input_string.substr(pos, pos_end - pos + 1);
-                if (item_name.empty()) {
-                    item_name = substring;
-                } else {
-                    ingredient.push_back(substring);
-                }
+                ingredient.push_back(substring);
                 pos = input_string.find('<', pos_end);
             }
             else {
@@ -65,25 +55,25 @@ void formatter::ct_recipe() {
             break;
         }
     }
-    item_name_main = get_main_name(item_name);
-    item_name_recipe = get_recipe_name(item_name);
 }
 
 
 /**
  * @brief Get the main name object
  * 
- * @param item_name item that the recipe is crafting
+ * @param item_name_main item that the recipe is crafting
+ * @param temp stored ingredient 0 string (item being crafted)
  * @return string default name
  */
-string formatter::get_main_name(const string& item_name) {
-    item_name_main = "";
-    size_t colon_pos = item_name.find(':');
+string formatter::get_main_name() {
+    string item_name_main;
+    string temp = ingredient[0];
+    size_t colon_pos = temp.find(':');
     if (colon_pos == string::npos) {
         return "";
     }
 
-    item_name_main = item_name.substr(colon_pos + 1, item_name.size() - colon_pos - 2);
+    item_name_main = temp.substr(colon_pos + 1, temp.size() - colon_pos - 2);
 
     for (size_t i = 0; i < item_name_main.length(); ++i) {
         if (item_name_main[i] == '_') {
@@ -107,27 +97,19 @@ string formatter::get_main_name(const string& item_name) {
 /**
  * @brief Get the recipe name object
  * 
- * @param item_name item that the recipe is crafting
+ * @param item_name_recipe item that the recipe is crafting
+ * @param temp string to store item thats being crafted (ingredient 0)
  * @return string unique recipe identifier name
  */
-string formatter::get_recipe_name(const string& item_name) {
-    item_name_recipe = "";
-    for (size_t i = 1; i < item_name.size() - 1; ++i) {
-        char ch = item_name[i];
+string formatter::get_recipe_name() {
+    string item_name_recipe;
+    string temp = ingredient[0];
+    for (size_t i = 1; i < temp.size() - 1; ++i) {
+        char ch = temp[i];
         if (ch == ':' || ch == '_') {
             continue;
         }
         item_name_recipe += ch;
-    }
-
-    bool capitalize_next = true;
-    for (char& ch : item_name_recipe) {
-        if (capitalize_next && islower(ch)) {
-            ch = toupper(ch);
-            capitalize_next = false;
-        } else if (isspace(ch)) {
-            capitalize_next = true;
-        }
     }
     return item_name_recipe;
 }
@@ -141,15 +123,15 @@ string formatter::get_recipe_name(const string& item_name) {
  * @param item_name_recipe unique recipe identifier name
  * @param ingredient item used in recipe
  */
-void formatter::ct_print(string item_name, string item_name_main, string item_name_recipe, const vector<string>& ingredient) {
+void formatter::ct_print() {
     cout << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n\n"
-         << setfill(' ') << "#" << item_name_main << "\n"
-         << setw(4) << " " << "recipes.remove(" << item_name << ");\n"
-         << setw(4) << " " << "recipes.addShaped(\"" << item_name_recipe << "\",\n"
-         << setw(8) << " " << item_name << ",\n"
-         << setw(12) << " " << "[[" << ingredient[0] << ", " << ingredient[1] << ", " << ingredient[2] << "],\n"
-         << setw(12) << " " << "[" << ingredient[3] << ", " << ingredient[4] << ", " << ingredient[5] << "],\n"
-         << setw(12) << " " << "[" << ingredient[6] << ", " << ingredient[7] << ", " << ingredient[8] << "]]);\n"
+         << setfill(' ') << "#" << get_main_name() << "\n"
+         << setw(4) << " " << "recipes.remove(" << ingredient[0] << ");\n"
+         << setw(4) << " " << "recipes.addShaped(\"" << get_recipe_name() << "\",\n"
+         << setw(8) << " " << ingredient[0] << ",\n"
+         << setw(12) << " " << "[[" << ingredient[1] << ", " << ingredient[2] << ", " << ingredient[3] << "],\n"
+         << setw(12) << " " << "[" << ingredient[4] << ", " << ingredient[5] << ", " << ingredient[6] << "],\n"
+         << setw(12) << " " << "[" << ingredient[7] << ", " << ingredient[8] << ", " << ingredient[9] << "]]);\n"
          << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n";
 }
 
@@ -174,11 +156,11 @@ void formatter::int_selection() {
      while (true) {
         cout << "Select Recipe Type: ";
         if (cin >> select_val && select_val == 1) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
             break;
         } else {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
             cout << "\n-------- Invalid Input --------\n(Enter a value within the range)\n";
         }
     }
@@ -229,31 +211,26 @@ int main() {
     formatter obj;
     obj.print_selection();
     obj.int_selection();
-    switch (obj.select_val) {
-        case 1:
-            while (true) {
-                obj.print_text_recipe();
-                getline(cin, obj.input_string);
-                if (obj.input_string == "exit") {
-                    obj.ingredient.clear();
-                    break;
-                }
-                if (obj.failsafe(obj.input_string)) {
-                    obj.ct_recipe();
-                    if (obj.ingredient.size() == 9) {
-                        obj.ct_print(obj.item_name, obj.item_name_main, obj.item_name_recipe, obj.ingredient);
-                        obj.ingredient.clear();
-                    } else {
-                        obj.print_text_invalid();
-                    }
-                    obj.ingredient.clear();
-                } else {
-                    obj.print_text_invalid();
-                }
+    
+    while (true) {
+        obj.print_text_recipe();
+        getline(cin, obj.input_string);
+        if (obj.input_string == "exit") {
+            obj.ingredient.clear();
+            break;
+        }
+        if (obj.failsafe(obj.input_string)) {
+            obj.ct_recipe();
+            if (obj.ingredient.size() >= 9) {
+                obj.ct_print();
+                obj.ingredient.clear();
+            } else {
+                obj.print_text_invalid();
             }
-            break;
-        default:
-            break;
+            obj.ingredient.clear();
+        } else {
+            obj.print_text_invalid();
+        }
     }
     return 0;
 }
