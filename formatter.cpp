@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <vector>
 #include <cctype>
+#include <limits>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ class formatter {
 
         void ct_recipe();
         void print_selection();
+        void int_selection();
         void ct_print(string, string, string, const vector<string>&);
         string get_main_name(const string&);
         string get_recipe_name(const string&);
@@ -165,20 +167,23 @@ void formatter::print_selection() {
          // << "[3] Extended Crafting 5x5\n"
          // << "[4] Extended Crafting 7x7\n"
          // << "[5] Extended Crafting 9x9\n"
-         << "------------------------------\n\n"
-         << "Select Recipe Type: ";
+         << "------------------------------\n\n";
+}
 
-    while (true) {
-        cin >> select_val;
-        cin.ignore();
-        if (select_val == 1) {
+void formatter::int_selection() {
+     while (true) {
+        cout << "Select Recipe Type: ";
+        if (cin >> select_val && select_val == 1) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             break;
         } else {
-            cout << "Incorrect value, Select Recipe Type: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\n-------- Invalid Input --------\n(Enter a value within the range)\n";
         }
-        cin.clear();   
     }
 }
+
 
 /**
  * @brief failsafe for the input string. makes sure the program doesnt shit bricks when someone inputs in the wrong thing
@@ -223,6 +228,7 @@ void formatter::print_text_recipe()
 int main() {
     formatter obj;
     obj.print_selection();
+    obj.int_selection();
     switch (obj.select_val) {
         case 1:
             while (true) {
