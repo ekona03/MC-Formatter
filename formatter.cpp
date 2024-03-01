@@ -8,22 +8,29 @@ using namespace std;
 class formatter {
     public:
         int select_val;
+        const string shaped = "recipes.addShaped";
+        const string shapeless = "recipes.addShapeless";
         string input_string;
         string substring;
+        string craft_amount;
         size_t pos;
         size_t pos_end;
         size_t pos_null;
+        size_t pos_asterisk;
+        size_t pos_asterisk_end;
         vector<string> ingredient;
 
         void ct_recipe();
-        void print_selection();
-        void int_selection();
-        void ct_print();
+        void ct_amount();
+        void print_title_info();
+        void print_crafting_recipe();
         string get_main_name();
         string get_recipe_name();
+        string get_recipe_type(const string&);
         bool failsafe(const string&);
         void print_text_invalid();
         void print_text_recipe();
+        string print_line();
 };
 
 
@@ -47,12 +54,22 @@ void formatter::ct_recipe() {
                 ingredient.push_back(substring);
                 pos = input_string.find('<', pos_end);
             }
-            else {
+            else
                 break;
-            }
         }
-        else {
+        else
             break;
+    }
+}
+
+
+void formatter::ct_amount() {
+    pos_asterisk = input_string.find("*");
+
+    if (pos_asterisk != string::npos) {
+        pos_asterisk_end = input_string.find(",");
+        if (pos_asterisk_end != string::npos) {
+            craft_amount = input_string.substr(pos_asterisk, pos_asterisk_end - pos_asterisk + 1);
         }
     }
 }
@@ -116,58 +133,6 @@ string formatter::get_recipe_name() {
 
 
 /**
- * @brief prints the formatted string
- * 
- * @param item_name registry name
- * @param item_name_main default name
- * @param item_name_recipe unique recipe identifier name
- * @param ingredient item used in recipe
- */
-void formatter::ct_print() {
-    cout << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n\n"
-         << setfill(' ') << "#" << get_main_name() << "\n"
-         << setw(4) << " " << "recipes.remove(" << ingredient[0] << ");\n"
-         << setw(4) << " " << "recipes.addShaped(\"" << get_recipe_name() << "\",\n"
-         << setw(8) << " " << ingredient[0] << ",\n"
-         << setw(12) << " " << "[[" << ingredient[1] << ", " << ingredient[2] << ", " << ingredient[3] << "],\n"
-         << setw(12) << " " << "[" << ingredient[4] << ", " << ingredient[5] << ", " << ingredient[6] << "],\n"
-         << setw(12) << " " << "[" << ingredient[7] << ", " << ingredient[8] << ", " << ingredient[9] << "]]);\n"
-         << "\n<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>-<>\n";
-}
-
-/**
- * @brief prints the recipe selection and makes sure the right value is inputed, 
- * otherwise will prompt user again
- * 
- */
-void formatter::print_selection() {
-    cout << "\n------------------------------\n"
-         << "CT Formatter\n"
-         << "------------------------------\n"
-         << "[1] CT Shaped Table Recipe\n"
-         // << "[2] Extended Crafting 3x3\n"
-         // << "[3] Extended Crafting 5x5\n"
-         // << "[4] Extended Crafting 7x7\n"
-         // << "[5] Extended Crafting 9x9\n"
-         << "------------------------------\n\n";
-}
-
-void formatter::int_selection() {
-     while (true) {
-        cout << "Select Recipe Type: ";
-        if (cin >> select_val && select_val == 1) {
-            cin.ignore();
-            break;
-        } else {
-            cin.clear();
-            cin.ignore();
-            cout << "\n-------- Invalid Input --------\n(Enter a value within the range)\n";
-        }
-    }
-}
-
-
-/**
  * @brief failsafe for the input string. makes sure the program doesnt shit bricks when someone inputs in the wrong thing
  * 
  * @param input_string standard input string
@@ -181,26 +146,86 @@ bool formatter::failsafe(const string& input_string) {
             count++;
         }
     }
-    return count >= 6;
+    return count >= 2;
 }
 
-/**
- * @brief prints the invalid input text unpon an invalid input being inputed
- * 
- */
-void formatter::print_text_invalid()
-{
+void formatter::print_title_info() {
+    cout << "\n+-----------------------------------------------------------+\n"
+         << "| ###################### CT Formatter ##################### |\n"
+         << "+-----------------------------------------------------------+\n"
+         << "| Supports CraftTweaker Shaped & Shapeless Crafting Recipes |\n"
+         << "+-----------------------------------------------------------+\n\n";
+}
+
+void formatter::print_text_invalid() {
     cout << "\n----------------------- Invalid Input -----------------------\n";
 }
 
-/**
- * @brief prints paste recipe below text
- * 
- */
-void formatter::print_text_recipe()
-{
+void formatter::print_text_recipe() {
     cout << "\nPaste in unformatted recipe below, type 'exit' to end program\n"
          << "v---v---v---v---v---v---v---v---v---v---v---v---v---v---v---v\n\n";
+}
+
+string formatter::print_line() {
+    string line = "<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>";
+    return line;
+}
+
+/**
+ * @brief returns either shaped or shapeless recipe type
+ * 
+ * @param input input string from standard input
+ * @return string recipe type
+ */
+string formatter::get_recipe_type(const string& input)
+{
+    char ch;
+    string recipe_type = "";
+
+    std::istringstream ss(input);
+
+    while (ss.get(ch)) {
+        if (ch == '(') {
+            break;
+        }
+        recipe_type += ch;
+    }
+    return recipe_type;
+}
+
+/**
+ * @brief prints the formatted string
+ * 
+ * @param item_name registry name
+ * @param item_name_main default name
+ * @param item_name_recipe unique recipe identifier name
+ * @param ingredient item used in recipe
+ */
+void formatter::print_crafting_recipe() {
+    cout << "\n" << print_line() << "\n\n"
+         << setfill(' ') << "#" << get_main_name() << "\n"
+         << setw(4) << " " << "recipes.remove(" << ingredient[0] << ");\n"
+         << setw(4) << " " << get_recipe_type(input_string) << "(\"" << get_recipe_name() << "\",\n"
+         << setw(8) << " " << ingredient[0] << " " << craft_amount << "\n";
+
+    if (get_recipe_type(input_string) == shaped) {
+        cout << setw(12) << " " << "[[" << ingredient[1] << ", " << ingredient[2] << ", " << ingredient[3] << "],\n"
+         << setw(12) << " " << "[" << ingredient[4] << ", " << ingredient[5] << ", " << ingredient[6] << "],\n"
+         << setw(12) << " " << "[" << ingredient[7] << ", " << ingredient[8] << ", " << ingredient[9] << "]]);\n"
+         << "\n" << print_line() << "\n";
+    } 
+    else if (get_recipe_type(input_string) == shapeless) {
+        cout << setw(12) << " " << "[";
+        int count = 0;
+        for (int i = 1; i < ingredient.size(); i++) {
+            cout << ingredient[i];
+            count++;
+            if (count < ingredient.size() - 1) {
+                cout << ",";
+            }
+        }
+        cout << "]);\n\n" << print_line() << "\n";
+    }
 }
 
 /**
@@ -209,8 +234,7 @@ void formatter::print_text_recipe()
  */
 int main() {
     formatter obj;
-    obj.print_selection();
-    obj.int_selection();
+    obj.print_title_info();
     
     while (true) {
         obj.print_text_recipe();
@@ -221,13 +245,16 @@ int main() {
         }
         if (obj.failsafe(obj.input_string)) {
             obj.ct_recipe();
-            if (obj.ingredient.size() >= 9) {
-                obj.ct_print();
+            obj.ct_amount();
+            if (!obj.ingredient.empty()) {
+                obj.print_crafting_recipe();
                 obj.ingredient.clear();
+                obj.craft_amount.clear();
             } else {
                 obj.print_text_invalid();
             }
             obj.ingredient.clear();
+            obj.craft_amount.clear();
         } else {
             obj.print_text_invalid();
         }
