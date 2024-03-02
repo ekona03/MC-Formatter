@@ -10,10 +10,11 @@ VSCode is not required for this, just MSYS2.
 # Limitations
 Currently limited to standard crafting table recipes.
 For Minecraft Version: 1.12.2
-
+Tags are currently unsupported.
 
 # Use Guide
-Upon running the exe, you should see this text appear in the command terminal you are using.
+
+Upon running the exe, you should see this text appear in your command terminal.
 ![ct1](https://github.com/ekona03/MC-Formatter/assets/76677529/3f714b4e-96f4-47bb-b2b7-8127c37c0c02)
 
 Next, copy the recipe you made with CraftTweaker, and paste it into the command terminal by "RIGHT CLICKING" it in, not "CTRL V".
@@ -24,4 +25,4 @@ Next, copy the recipe you made with CraftTweaker, and paste it into the command 
 Finally, press "ENTER" and the recipe will be formatted, along with the program prompting you to paste in another recipe, until you type "exit".
 ![ct3](https://github.com/ekona03/MC-Formatter/assets/76677529/d241a380-d292-49bc-a6c1-254f45befcd6)
 
-To copy the formatted recipe out, highlight it, and RIGHT CLICK to copy from terminal.
+To copy the formatted recipe out, highlight it, and RIGHT CLICK to copy from the terminal.
