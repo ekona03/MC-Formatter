@@ -19,11 +19,15 @@ Tags are currently unsupported.
 
 ![ct1](https://github.com/ekona03/MC-Formatter/assets/76677529/3f714b4e-96f4-47bb-b2b7-8127c37c0c02)
 
+##
+
 ### Next, copy the recipe you made with CraftTweaker, and paste it into the command terminal by RIGHT CLICKING it in, not CTRL V.
 
 ![c2 5](https://github.com/ekona03/MC-Formatter/assets/76677529/b3754e52-39e0-4429-ad22-cde9de713e66)
 ![ct2](https://github.com/ekona03/MC-Formatter/assets/76677529/c9ead4bd-6965-405b-8054-5971bd934c5d)
 
+
+##
 
 ### Finally, press "ENTER" and the recipe will be formatted, along with the program prompting you to paste in another recipe, until you type "exit".
 
