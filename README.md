@@ -12,7 +12,7 @@ Currently limited to standard crafting table recipes.
 For Minecraft Version: 1.12.2
 
 
-#Use Guide
+# Use Guide
 Upon running the exe, you should see this text appear in the command terminal you are using
 ![ct1](https://github.com/ekona03/MC-Formatter/assets/76677529/3f714b4e-96f4-47bb-b2b7-8127c37c0c02)
 
