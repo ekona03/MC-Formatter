@@ -10,6 +10,7 @@ VSCode is not required for this, just MSYS2.
 # Limitations
 Currently limited to standard crafting table recipes.
 For Minecraft Version: 1.12.2
+
 Tags are currently unsupported.
 
 # Use Guide
