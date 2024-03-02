@@ -21,7 +21,7 @@ Tags are currently unsupported.
 
 ##
 
-### Next, copy the recipe you made with CraftTweaker, and paste it into the command terminal by RIGHT CLICKING it in, not CTRL V.
+### Next, copy the recipe you made with CraftTweaker, and paste it into the command terminal by **RIGHT CLICKING** it in, **not** CTRL V.
 
 ![c2 5](https://github.com/ekona03/MC-Formatter/assets/76677529/b3754e52-39e0-4429-ad22-cde9de713e66)
 ![ct2](https://github.com/ekona03/MC-Formatter/assets/76677529/c9ead4bd-6965-405b-8054-5971bd934c5d)
@@ -33,4 +33,4 @@ Tags are currently unsupported.
 
 ![ct3](https://github.com/ekona03/MC-Formatter/assets/76677529/d241a380-d292-49bc-a6c1-254f45befcd6)
 
-### To copy the formatted recipe out, highlight it, and RIGHT CLICK to copy from the terminal.
+### To copy the formatted recipe out, highlight it, and **RIGHT CLICK** to copy from the terminal.
