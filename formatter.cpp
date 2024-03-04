@@ -1,37 +1,6 @@
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <vector>
-
-using namespace std;
-
-class formatter {
-    public:
-        int select_val;
-        const string shaped = "recipes.addShaped";
-        const string shapeless = "recipes.addShapeless";
-        string input_string;
-        string substring;
-        string craft_amount;
-        size_t pos;
-        size_t pos_end;
-        size_t pos_null;
-        size_t pos_asterisk;
-        size_t pos_asterisk_end;
-        vector<string> ingredient;
-
-        void ct_recipe();
-        void ct_amount();
-        void print_title_info();
-        void print_crafting_recipe();
-        string get_main_name();
-        string get_recipe_name();
-        string get_recipe_type(const string&);
-        bool failsafe(const string&);
-        void print_text_invalid();
-        void print_text_recipe();
-        string print_line();
-};
+#include "formatter.h"
+#include "print_statements.h"
+#include "print_statements.cpp"
 
 
 /**
@@ -39,18 +8,18 @@ class formatter {
  * iterates through the string and stores each item within <> and each null to a vector string.
  * 
  */
-void formatter::ct_recipe() {
-    pos = input_string.find('<');
-    pos_null = input_string.find("null");
+void formatter::ct_recipe(string input_string) {
+    size_t pos = input_string.find('<');
+    size_t pos_null = input_string.find("null");
 
     while (pos != string::npos || pos_null != string::npos) {
         if (pos_null != string::npos && (pos == string::npos || pos_null < pos)) {
             ingredient.push_back("null");
             pos_null = input_string.find("null", pos_null + 4);
         } else if (pos != string::npos) {
-            pos_end = input_string.find('>', pos);
+            size_t pos_end = input_string.find('>', pos);
             if (pos_end != string::npos) {
-                substring = input_string.substr(pos, pos_end - pos + 1);
+                string substring = input_string.substr(pos, pos_end - pos + 1);
                 ingredient.push_back(substring);
                 pos = input_string.find('<', pos_end);
             }
@@ -62,16 +31,21 @@ void formatter::ct_recipe() {
     }
 }
 
-
-void formatter::ct_amount() {
-    pos_asterisk = input_string.find("*");
+/**
+ * @brief finds the amount to be crafted
+ * 
+ */
+string formatter::ct_amount(string input_string) {
+    size_t pos_asterisk = input_string.find("*");
+    string craft_amount;
 
     if (pos_asterisk != string::npos) {
-        pos_asterisk_end = input_string.find(",");
+        size_t pos_asterisk_end = input_string.find(",");
         if (pos_asterisk_end != string::npos) {
             craft_amount = input_string.substr(pos_asterisk, pos_asterisk_end - pos_asterisk + 1);
         }
     }
+    return craft_amount;
 }
 
 
@@ -131,53 +105,13 @@ string formatter::get_recipe_name() {
     return item_name_recipe;
 }
 
-
-/**
- * @brief failsafe for the input string. makes sure the program doesnt shit bricks when someone inputs in the wrong thing
- * 
- * @param input_string standard input string
- * @return true if number of "<" in the input string is at least 6
- * @return false if number of "<" in the input string is less than 6
- */
-bool formatter::failsafe(const string& input_string) {
-    int count = 0;
-    for (char ch : input_string) {
-        if (ch == '<') {
-            count++;
-        }
-    }
-    return count >= 2;
-}
-
-void formatter::print_title_info() {
-    cout << "\n+-----------------------------------------------------------+\n"
-         << "| ###################### CT Formatter ##################### |\n"
-         << "+-----------------------------------------------------------+\n"
-         << "| Supports CraftTweaker Shaped & Shapeless Crafting Recipes |\n"
-         << "+-----------------------------------------------------------+\n\n";
-}
-
-void formatter::print_text_invalid() {
-    cout << "\n----------------------- Invalid Input -----------------------\n";
-}
-
-void formatter::print_text_recipe() {
-    cout << "\nPaste in unformatted recipe below, type 'exit' to end program\n"
-         << "v---v---v---v---v---v---v---v---v---v---v---v---v---v---v---v\n\n";
-}
-
-string formatter::print_line() {
-    string line = "<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>";
-    return line;
-}
-
 /**
  * @brief returns either shaped or shapeless recipe type
  * 
  * @param input input string from standard input
  * @return string recipe type
  */
-string formatter::get_recipe_type(const string& input)
+string formatter::get_recipe_type(string input)
 {
     char ch;
     string recipe_type = "";
@@ -201,20 +135,20 @@ string formatter::get_recipe_type(const string& input)
  * @param item_name_recipe unique recipe identifier name
  * @param ingredient item used in recipe
  */
-void formatter::print_crafting_recipe() {
-    cout << "\n" << print_line() << "\n\n"
+void formatter::print_crafting_recipe(string input_string, string recipe_type, string craft_amount) {
+    cout << "\n" << "<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>" << "\n\n"
          << setfill(' ') << "#" << get_main_name() << "\n"
          << setw(4) << " " << "recipes.remove(" << ingredient[0] << ");\n"
-         << setw(4) << " " << get_recipe_type(input_string) << "(\"" << get_recipe_name() << "\",\n"
+         << setw(4) << " " << recipe_type << "(\"" << get_recipe_name() << "\",\n"
          << setw(8) << " " << ingredient[0] << " " << craft_amount << "\n";
 
-    if (get_recipe_type(input_string) == shaped) {
+    if (recipe_type == shaped) {
         cout << setw(12) << " " << "[[" << ingredient[1] << ", " << ingredient[2] << ", " << ingredient[3] << "],\n"
          << setw(12) << " " << "[" << ingredient[4] << ", " << ingredient[5] << ", " << ingredient[6] << "],\n"
          << setw(12) << " " << "[" << ingredient[7] << ", " << ingredient[8] << ", " << ingredient[9] << "]]);\n"
-         << "\n" << print_line() << "\n";
+         << "\n" << "<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>" << "\n";
     } 
-    else if (get_recipe_type(input_string) == shapeless) {
+    else if (recipe_type == shapeless) {
         cout << setw(12) << " " << "[";
         int count = 0;
         for (int i = 1; i < ingredient.size(); i++) {
@@ -224,40 +158,43 @@ void formatter::print_crafting_recipe() {
                 cout << ",";
             }
         }
-        cout << "]);\n\n" << print_line() << "\n";
+        cout << "]);\n\n" << "<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>=<>" << "\n";
     }
 }
 
-/**
- * @brief standard input for recipe type selection.
- * 
- */
-int main() {
-    formatter obj;
-    obj.print_title_info();
+void formatter::format()
+{
+    string input_string;
+    string recipe_type;
+    string craft_amount;
+
+    print_title_info();
     
     while (true) {
-        obj.print_text_recipe();
-        getline(cin, obj.input_string);
-        if (obj.input_string == "exit") {
-            obj.ingredient.clear();
+        print_paste_text();
+        getline(cin, input_string);
+
+        if (input_string == "exit") {
             break;
         }
-        if (obj.failsafe(obj.input_string)) {
-            obj.ct_recipe();
-            obj.ct_amount();
-            if (!obj.ingredient.empty()) {
-                obj.print_crafting_recipe();
-                obj.ingredient.clear();
-                obj.craft_amount.clear();
-            } else {
-                obj.print_text_invalid();
-            }
-            obj.ingredient.clear();
-            obj.craft_amount.clear();
+
+        recipe_type = get_recipe_type(input_string);
+        craft_amount = ct_amount(input_string);
+
+        if (recipe_type == shaped || recipe_type == shapeless) {
+            ct_recipe(input_string);
+            print_crafting_recipe(input_string, recipe_type, craft_amount);
+            ingredient.clear();
+            input_string.clear();
+            recipe_type.clear();
+            craft_amount.clear();
+
         } else {
-            obj.print_text_invalid();
+            print_invalid_text();
+            ingredient.clear();
+            input_string.clear();
+            recipe_type.clear();
+            craft_amount.clear();
         }
     }
-    return 0;
 }
