@@ -45,6 +45,9 @@ string formatter::ct_amount(string input_string) {
             craft_amount = input_string.substr(pos_asterisk, pos_asterisk_end - pos_asterisk + 1);
         }
     }
+    if (!craft_amount.empty()) {
+        craft_amount.erase(craft_amount.size() - 1);
+    }
     return craft_amount;
 }
 
@@ -140,7 +143,7 @@ void formatter::print_crafting_recipe(string input_string, string recipe_type, s
          << setfill(' ') << "#" << get_main_name() << "\n"
          << setw(4) << " " << "recipes.remove(" << ingredient[0] << ");\n"
          << setw(4) << " " << recipe_type << "(\"" << get_recipe_name() << "\",\n"
-         << setw(8) << " " << ingredient[0] << " " << craft_amount << "\n";
+         << setw(8) << " " << ingredient[0] << craft_amount << ",\n";
 
     if (recipe_type == shaped) {
         cout << setw(12) << " " << "[[" << ingredient[1] << ", " << ingredient[2] << ", " << ingredient[3] << "],\n"
@@ -188,7 +191,6 @@ void formatter::format()
             input_string.clear();
             recipe_type.clear();
             craft_amount.clear();
-
         } else {
             print_invalid_text();
             ingredient.clear();
